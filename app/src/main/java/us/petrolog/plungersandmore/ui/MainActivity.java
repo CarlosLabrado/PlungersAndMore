@@ -24,7 +24,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 import com.firebase.ui.auth.core.FirebaseLoginBaseActivity;
 import com.firebase.ui.auth.core.FirebaseLoginError;
@@ -39,6 +42,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -68,6 +74,8 @@ public class MainActivity extends FirebaseLoginBaseActivity
     private Firebase mFirebaseRef;
     private RecyclerView mRecyclerViewWell;
     private FirebaseRecyclerAdapter<Well, WellListHolder> mRecycleViewAdapter;
+
+    private ArrayList<Well> mWells;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -310,10 +318,42 @@ public class MainActivity extends FirebaseLoginBaseActivity
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        populateMapArray();
+
+        mMap.setMyLocationEnabled(true);
+
 //        // Add a marker in Sydney and move the camera
 //        LatLng sydney = new LatLng(-34, 151);
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    private void populateMapArray() {
+        Firebase wellRef = new Firebase("https://plungersandmore.firebaseio.com/wellsTest");
+
+        mWells = new ArrayList<>();
+
+        wellRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Well well = postSnapshot.getValue(Well.class);
+                    mWells.add(well);
+                    drawMarker(well);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+    }
+
+    private void drawMarker(Well well) {
+        LatLng latLng = new LatLng(well.getLatitude(), well.getLongitude());
+        mMap.addMarker(new MarkerOptions().position(latLng).title(well.getName()));
     }
 
     /**
