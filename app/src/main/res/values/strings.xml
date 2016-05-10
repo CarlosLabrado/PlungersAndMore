@@ -5,4 +5,11 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="title_activity_maps">Map</string>
+
+    <!--gps misc-->
+    <string name="dialog_cancel">Cancel</string>
+    <string name="gps_network_not_enabled">GPS is not enabled</string>
+    <string name="gps_network_not_enabled_message">This application needs the location services to be enabled, please open the location settings and enable it</string>
+    <string name="open_location_settings">Open location settings</string>
 </resources>
