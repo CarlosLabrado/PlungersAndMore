@@ -12,4 +12,11 @@
     <string name="gps_network_not_enabled">GPS is not enabled</string>
     <string name="gps_network_not_enabled_message">This application needs the location services to be enabled, please open the location settings and enable it</string>
     <string name="open_location_settings">Open location settings</string>
+
+    <string name="bottom_menu_current">Current Status</string>
+    <string name="bottom_menu_historical">Historical Cycles</string>
+    <string name="bottom_menu_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

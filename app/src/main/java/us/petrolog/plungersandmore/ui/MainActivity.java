@@ -93,7 +93,8 @@ public class MainActivity extends FirebaseLoginBaseActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                generateTestWells();
+//                generateTestWells();
+                showTabs();
             }
         });
 
@@ -114,6 +115,11 @@ public class MainActivity extends FirebaseLoginBaseActivity
         setUpMap();
 
 
+    }
+
+    private void showTabs() {
+        Intent intent = new Intent(this, TabContainerActivity.class);
+        startActivity(intent);
     }
 
     private void enableLocationRequests() {
