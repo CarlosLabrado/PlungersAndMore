@@ -8,6 +8,7 @@ import android.content.IntentSender;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -17,9 +18,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +31,7 @@ import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 import com.firebase.ui.auth.core.FirebaseLoginBaseActivity;
@@ -45,11 +50,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import us.petrolog.plungersandmore.Constants;
 import us.petrolog.plungersandmore.R;
+import us.petrolog.plungersandmore.model.CurrentStatus;
+import us.petrolog.plungersandmore.model.Cycle;
+import us.petrolog.plungersandmore.model.Open;
+import us.petrolog.plungersandmore.model.ShutIn;
 import us.petrolog.plungersandmore.model.Well;
 import us.petrolog.plungersandmore.utils.LogUtil;
 
@@ -64,6 +75,8 @@ public class MainActivity extends FirebaseLoginBaseActivity
     NavigationView mNavigationView;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    @Bind(R.id.editTextSearch)
+    EditText mEditTextSearch;
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -76,6 +89,11 @@ public class MainActivity extends FirebaseLoginBaseActivity
     private FirebaseRecyclerAdapter<Well, WellListHolder> mRecycleViewAdapter;
 
     private ArrayList<Well> mWells;
+
+    private final long SEARCH_TRIGGER_DELAY_IN_MS = 1000;
+    private boolean searchIsRunning = false;
+
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,8 +131,51 @@ public class MainActivity extends FirebaseLoginBaseActivity
         populateRecyclerView();
 
         setUpMap();
+        mHandler = new Handler();
 
 
+        mEditTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.toString().length() > 0) {
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            search();
+                        }
+                    }, SEARCH_TRIGGER_DELAY_IN_MS);
+                }
+            }
+        });
+    }
+
+    public void search() {
+        Firebase wellRef = new Firebase("https://plungersandmore.firebaseio.com/wellsTest");
+        Query query = wellRef;
+        if (!mEditTextSearch.getText().toString().isEmpty()) {
+            query = wellRef.orderByChild("name").equalTo(mEditTextSearch.getText().toString());
+        }
+
+        mRecyclerViewWell.removeAllViews();
+        mRecycleViewAdapter = new FirebaseRecyclerAdapter<Well, WellListHolder>(Well.class, R.layout.item_well, WellListHolder.class, query) {
+            @Override
+            public void populateViewHolder(WellListHolder listView, Well well, int position) {
+                listView.setName(well.getName());
+                listView.setState(String.valueOf(well.getCurrentStatus().getCasingPressure()));
+            }
+        };
+
+        mRecyclerViewWell.setAdapter(mRecycleViewAdapter);
     }
 
     private void showTabs() {
@@ -198,12 +259,13 @@ public class MainActivity extends FirebaseLoginBaseActivity
         mRecyclerViewWell.setLayoutManager(manager);
 
         Firebase wellRef = new Firebase("https://plungersandmore.firebaseio.com/wellsTest");
+        Query query = wellRef;
 
-        mRecycleViewAdapter = new FirebaseRecyclerAdapter<Well, WellListHolder>(Well.class, R.layout.item_well, WellListHolder.class, wellRef) {
+        mRecycleViewAdapter = new FirebaseRecyclerAdapter<Well, WellListHolder>(Well.class, R.layout.item_well, WellListHolder.class, query) {
             @Override
             public void populateViewHolder(WellListHolder listView, Well well, int position) {
                 listView.setName(well.getName());
-                listView.setState(well.getState());
+                listView.setState(String.valueOf(well.getCurrentStatus().getCasingPressure()));
             }
         };
 
@@ -212,12 +274,44 @@ public class MainActivity extends FirebaseLoginBaseActivity
 
     private void generateTestWells() {
         String userEmail = (String) mFirebaseRef.getAuth().getProviderData().get("email");
-        Well well = new Well("uno", "ok", "first", 28.6752758, -106.1404511, true, "PDT", userEmail);
-        Well well2 = new Well("dos", "ok", "first", 28.6802217, -106.1182286, true, "PDT", userEmail);
-        Well well3 = new Well("tres", "ok", "first", 28.6756834, -106.1366093, true, "PDT", userEmail);
-        Well well4 = new Well("cuatro", "ok", "first", 28.6802217, -106.1182286, true, "PDT", userEmail);
-        Well well5 = new Well("cinco", "ok", "first", 28.6735469, -106.1384236, true, "PDT", userEmail);
-        Well well6 = new Well("seis", "ok", "first", 28.6738751, -106.1303234, true, "PDT", userEmail);
+
+        Calendar c = Calendar.getInstance();
+        c.getTimeInMillis();
+        Cycle cycle = new Cycle(c.getTimeInMillis(), new Open(1521, 1000, 100, c.getTimeInMillis()), new ShutIn(1521, 1000, 100, c.getTimeInMillis()));
+
+        List<Cycle> cycles = new ArrayList<>();
+        cycles.add(cycle);
+
+        Well well = new Well("uno",
+                new CurrentStatus(1234, 1000, 20, 2152, 100),
+                cycles,
+                new us.petrolog.plungersandmore.model.Location(28.6752758, -106.1404511),
+                null);
+        Well well2 = new Well("dos",
+                new CurrentStatus(1234, 1000, 20, 2152, 100),
+                cycles,
+                new us.petrolog.plungersandmore.model.Location(28.6802217, -106.1182286),
+                null);
+        Well well3 = new Well("tres",
+                new CurrentStatus(1234, 1000, 20, 2152, 100),
+                cycles,
+                new us.petrolog.plungersandmore.model.Location(28.6756834, -106.1366093),
+                null);
+        Well well4 = new Well("cuatro",
+                new CurrentStatus(1234, 1000, 20, 2152, 100),
+                cycles,
+                new us.petrolog.plungersandmore.model.Location(28.6802217, -106.1182286),
+                null);
+        Well well5 = new Well("cinco",
+                new CurrentStatus(1234, 1000, 20, 2152, 100),
+                cycles,
+                new us.petrolog.plungersandmore.model.Location(28.6735469, -106.1384236),
+                null);
+        Well well6 = new Well("seis",
+                new CurrentStatus(1234, 1000, 20, 2152, 100),
+                cycles,
+                new us.petrolog.plungersandmore.model.Location(28.6738751, -106.1303234),
+                null);
         mFirebaseRef.child("wellsTest").push().setValue(well);
         mFirebaseRef.child("wellsTest").push().setValue(well2);
         mFirebaseRef.child("wellsTest").push().setValue(well3);
@@ -358,7 +452,7 @@ public class MainActivity extends FirebaseLoginBaseActivity
     }
 
     private void drawMarker(Well well) {
-        LatLng latLng = new LatLng(well.getLatitude(), well.getLongitude());
+        LatLng latLng = new LatLng(well.getLocation().getLat(), well.getLocation().getLon());
         mMap.addMarker(new MarkerOptions().position(latLng).title(well.getName()));
     }
 
@@ -481,6 +575,12 @@ public class MainActivity extends FirebaseLoginBaseActivity
         public WellListHolder(View itemView) {
             super(itemView);
             mView = itemView;
+            mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mView.getContext(), "message", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         public void setName(String name) {
