@@ -1,43 +1,51 @@
 package us.petrolog.plungersandmore.model;
 
+import java.util.HashMap;
+
 /**
- * Created by Vazh on 11/5/2016.
+ * Defines the data structure for User objects.
  */
 public class User {
-    private String mUId;
-    private String mEmail;
-    private String mName;
+    private String name;
+    private String email;
+    private HashMap<String, Object> timestampJoined;
+    private HashMap<String, Object> assignedWells;
 
+    /**
+     * Required public constructor
+     */
     public User() {
     }
 
-    public User(String UId, String email, String name) {
-        mUId = UId;
-        mEmail = email;
-        mName = name;
-    }
-
-    public String getUId() {
-        return mUId;
-    }
-
-    public void setUId(String UId) {
-        mUId = UId;
-    }
-
-    public String getEmail() {
-        return mEmail;
-    }
-
-    public void setEmail(String email) {
-        mEmail = email;
+    /**
+     * Use this constructor to create new User.
+     * Takes user name, email and timestampJoined as params
+     *
+     * @param name
+     * @param email
+     * @param timestampJoined
+     */
+    public User(String name, String email, HashMap<String, Object> timestampJoined, HashMap<String, Object> assignedWells) {
+        this.name = name;
+        this.email = email;
+        this.timestampJoined = timestampJoined;
+        this.assignedWells = assignedWells;
     }
 
     public String getName() {
-        return mName;
+        return name;
     }
 
-    public void setName(String name) {
-        mName = name;
+    public String getEmail() {
+        return email;
+    }
+
+    public HashMap<String, Object> getTimestampJoined() {
+        return timestampJoined;
+    }
+
+
+    public HashMap<String, Object> getAssignedWells() {
+        return assignedWells;
     }
 }

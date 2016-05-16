@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -51,17 +53,18 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import us.petrolog.plungersandmore.Constants;
 import us.petrolog.plungersandmore.R;
 import us.petrolog.plungersandmore.model.CurrentStatus;
 import us.petrolog.plungersandmore.model.Cycle;
 import us.petrolog.plungersandmore.model.Open;
 import us.petrolog.plungersandmore.model.ShutIn;
+import us.petrolog.plungersandmore.model.User;
 import us.petrolog.plungersandmore.model.Well;
+import us.petrolog.plungersandmore.utils.Constants;
 import us.petrolog.plungersandmore.utils.LogUtil;
 
 public class MainActivity extends FirebaseLoginBaseActivity
@@ -85,6 +88,12 @@ public class MainActivity extends FirebaseLoginBaseActivity
     private LocationRequest mLocationRequest;
     private LatLng mLatLng;
     private Firebase mFirebaseRef;
+    private ValueEventListener mUserRefListener;
+
+    private Firebase mUserRef;
+
+    private User mCurrentUser;
+
     private RecyclerView mRecyclerViewWell;
     private FirebaseRecyclerAdapter<Well, WellListHolder> mRecycleViewAdapter;
 
@@ -104,14 +113,47 @@ public class MainActivity extends FirebaseLoginBaseActivity
         /** toolBar **/
         setUpToolBar();
 
-        mFirebaseRef = new Firebase("https://plungersandmore.firebaseio.com");
+        mFirebaseRef = new Firebase(Constants.FIREBASE_URL);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String encodedEmail = sp.getString(Constants.KEY_EMAIL, null);
+        mUserRef = new Firebase(Constants.FIREBASE_URL_USERS).child(encodedEmail);
+        /**
+         * Add ValueEventListeners to Firebase references
+         * to control get data and control behavior and visibility of elements
+         */
+        mUserRefListener = mUserRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                mCurrentUser = snapshot.getValue(User.class);
+
+                /**
+                 * Set the activity title to current user name if user is not null
+                 */
+                if (mCurrentUser != null) {
+                    /* Assumes that the first word in the user's name is the user's first name. */
+                    try {
+                        String firstName = mCurrentUser.getName().split("\\s+")[0];
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                LogUtil.logE(TAG,
+                        getString(R.string.log_error_the_read_failed) +
+                                firebaseError.getMessage());
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                generateTestWells();
+                //generateTestWells();
                 showTabs();
             }
         });
@@ -160,7 +202,7 @@ public class MainActivity extends FirebaseLoginBaseActivity
     }
 
     public void search() {
-        Firebase wellRef = new Firebase("https://plungersandmore.firebaseio.com/wellsTest");
+        Firebase wellRef = new Firebase(Constants.FIREBASE_URL_WELLS);
         Query query = wellRef;
         if (!mEditTextSearch.getText().toString().isEmpty()) {
             query = wellRef.orderByChild("name").equalTo(mEditTextSearch.getText().toString());
@@ -258,8 +300,9 @@ public class MainActivity extends FirebaseLoginBaseActivity
         mRecyclerViewWell.setHasFixedSize(false);
         mRecyclerViewWell.setLayoutManager(manager);
 
-        Firebase wellRef = new Firebase("https://plungersandmore.firebaseio.com/wellsTest");
+        Firebase wellRef = new Firebase(Constants.FIREBASE_URL_WELLS);
         Query query = wellRef;
+
 
         mRecycleViewAdapter = new FirebaseRecyclerAdapter<Well, WellListHolder>(Well.class, R.layout.item_well, WellListHolder.class, query) {
             @Override
@@ -273,14 +316,14 @@ public class MainActivity extends FirebaseLoginBaseActivity
     }
 
     private void generateTestWells() {
-        String userEmail = (String) mFirebaseRef.getAuth().getProviderData().get("email");
+        //String userEmail = (String) mFirebaseRef.getAuth().getProviderData().get("email");
 
         Calendar c = Calendar.getInstance();
         c.getTimeInMillis();
-        Cycle cycle = new Cycle(c.getTimeInMillis(), new Open(1521, 1000, 100, c.getTimeInMillis()), new ShutIn(1521, 1000, 100, c.getTimeInMillis()));
+        Cycle cycle = new Cycle(new Open(1521, 1000, 100, c.getTimeInMillis()), new ShutIn(1521, 1000, 100, c.getTimeInMillis()), c.getTimeInMillis());
 
-        List<Cycle> cycles = new ArrayList<>();
-        cycles.add(cycle);
+        HashMap<String, Cycle> cycles = new HashMap<>();
+        cycles.put("pop", cycle);
 
         Well well = new Well("uno",
                 new CurrentStatus(1234, 1000, 20, 2152, 100),
@@ -563,6 +606,12 @@ public class MainActivity extends FirebaseLoginBaseActivity
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mUserRef.removeEventListener(mUserRefListener);
     }
 
 
