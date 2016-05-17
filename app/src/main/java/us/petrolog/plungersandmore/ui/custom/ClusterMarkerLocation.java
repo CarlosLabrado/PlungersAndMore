@@ -12,10 +12,12 @@ public class ClusterMarkerLocation implements ClusterItem {
 
     private LatLng position;
     private Well well;
+    private String wellKey;
 
-    public ClusterMarkerLocation(LatLng position, Well well) {
+    public ClusterMarkerLocation(LatLng position, Well well, String wellKey) {
         this.position = position;
         this.well = well;
+        this.wellKey = wellKey;
     }
 
     @Override
@@ -33,5 +35,13 @@ public class ClusterMarkerLocation implements ClusterItem {
 
     public void setWell(Well well) {
         this.well = well;
+    }
+
+    public String getWellKey() {
+        return wellKey;
+    }
+
+    public void setWellKey(String wellKey) {
+        this.wellKey = wellKey;
     }
 }

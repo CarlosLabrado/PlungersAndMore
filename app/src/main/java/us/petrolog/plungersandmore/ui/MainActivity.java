@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -60,6 +59,7 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -150,6 +150,8 @@ public class MainActivity extends FirebaseLoginBaseActivity
                 if (mCurrentUser != null) {
                     /* Assumes that the first word in the user's name is the user's first name. */
                     try {
+                        TextView textViewDrawer = (TextView) mDrawerLayout.findViewById(R.id.textViewDrawerName);
+                        textViewDrawer.setText(mCurrentUser.getEmail());
                         String firstName = mCurrentUser.getName().split("\\s+")[0];
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -165,15 +167,6 @@ public class MainActivity extends FirebaseLoginBaseActivity
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        assert fab != null;
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //generateTestWells();
-                showTabs();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -218,25 +211,7 @@ public class MainActivity extends FirebaseLoginBaseActivity
         });
     }
 
-    public void search() {
-        Firebase wellRef = new Firebase(Constants.FIREBASE_URL_WELLS);
-        Query query = wellRef;
-        if (!mEditTextSearch.getText().toString().isEmpty()) {
-            query = wellRef.orderByChild("name").equalTo(mEditTextSearch.getText().toString());
-        }
 
-        mRecyclerViewWell.removeAllViews();
-        mRecycleViewAdapter = new FirebaseRecyclerAdapter<Well, WellListHolder>(Well.class, R.layout.item_well, WellListHolder.class, query) {
-            @Override
-            public void populateViewHolder(WellListHolder listView, Well well, int position) {
-                listView.setName(well.getName());
-                listView.setState(String.valueOf(well.getCurrentStatus().getCyclesCompleted()));
-            }
-
-        };
-
-        mRecyclerViewWell.setAdapter(mRecycleViewAdapter);
-    }
 
     private void showTabs() {
         Intent intent = new Intent(this, TabContainerActivity.class);
@@ -325,8 +300,43 @@ public class MainActivity extends FirebaseLoginBaseActivity
             @Override
             public void populateViewHolder(WellListHolder listView, Well well, final int position) {
                 listView.setName(well.getName());
-                listView.setState(String.valueOf(well.getCurrentStatus().getCyclesCompleted()));
+                String state = "Normal";
+                if (well.getCurrentStatus().getState() == 0) {
+                    state = "Normal";
+                } else {
+                    state = "Bad";
+                }
+                listView.setState(state);
 
+                listView.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        Toast.makeText(getApplicationContext(), "message " + position, Toast.LENGTH_SHORT).show();
+                        String fullWellReference = mRecycleViewAdapter.getRef(position).toString();
+
+                        startTabActivity(fullWellReference);
+
+                    }
+                });
+            }
+        };
+
+        mRecyclerViewWell.setAdapter(mRecycleViewAdapter);
+    }
+
+    public void search() {
+        Firebase wellRef = new Firebase(Constants.FIREBASE_URL_WELLS);
+        Query query = wellRef;
+        if (!mEditTextSearch.getText().toString().isEmpty()) {
+            query = wellRef.orderByChild("name").equalTo(mEditTextSearch.getText().toString());
+        }
+
+        mRecyclerViewWell.removeAllViews();
+        mRecycleViewAdapter = new FirebaseRecyclerAdapter<Well, WellListHolder>(Well.class, R.layout.item_well, WellListHolder.class, query) {
+            @Override
+            public void populateViewHolder(WellListHolder listView, Well well, final int position) {
+                listView.setName(well.getName());
+                listView.setState(String.valueOf(well.getCurrentStatus().getCyclesCompleted()));
                 listView.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -338,6 +348,7 @@ public class MainActivity extends FirebaseLoginBaseActivity
                     }
                 });
             }
+
         };
 
         mRecyclerViewWell.setAdapter(mRecycleViewAdapter);
@@ -382,19 +393,19 @@ public class MainActivity extends FirebaseLoginBaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
+//        if (id == R.id.nav_camera) {
+//            // Handle the camera action
+//        } else if (id == R.id.nav_gallery) {
+//
+//        } else if (id == R.id.nav_slideshow) {
+//
+//        } else if (id == R.id.nav_manage) {
+//
+//        } else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+//
+//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -420,7 +431,7 @@ public class MainActivity extends FirebaseLoginBaseActivity
 
     @Override
     public void onFirebaseLoggedIn(AuthData authData) {
-        Toast.makeText(this, "Hi ", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Hi ", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -451,7 +462,9 @@ public class MainActivity extends FirebaseLoginBaseActivity
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterMarkerLocation>() {
             @Override
             public boolean onClusterItemClick(ClusterMarkerLocation clusterMarkerLocation) {
-                Toast.makeText(MainActivity.this, "Cluster item clicked", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Cluster item clicked", Toast.LENGTH_SHORT).show();
+                String fullRef = Constants.FIREBASE_URL_WELLS + "/" + clusterMarkerLocation.getWellKey();
+                startTabActivity(fullRef);
 //                mDeviceClicked = clusterMarkerLocation.getDevice();
 //                mButtonGoToDetail.show();
                 return false;
@@ -460,7 +473,7 @@ public class MainActivity extends FirebaseLoginBaseActivity
         mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<ClusterMarkerLocation>() {
             @Override
             public void onClusterItemInfoWindowClick(ClusterMarkerLocation clusterMarkerLocation) {
-                Toast.makeText(MainActivity.this, "Cluster item  INFO clicked", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Cluster item  INFO clicked", Toast.LENGTH_SHORT).show();
 
 //                Device device = clusterMarkerLocation.getDevice();
 //                MainActivity.mBus.post(new StartDetailFragmentEvent(device.getRemoteDeviceId(), device.getName(), device.getLocation()));
@@ -499,11 +512,14 @@ public class MainActivity extends FirebaseLoginBaseActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+
+                    String wellKey = (String) ((Map.Entry) ((java.util.HashMap) dataSnapshot.getValue()).entrySet().toArray()[0]).getKey();
+
                     Well well = postSnapshot.getValue(Well.class);
                     LatLng latLng = new LatLng(well.getLocation().getLat(), well.getLocation().getLon());
                     boundsBuilder.include(latLng);
 
-                    mClusterManager.addItem(new ClusterMarkerLocation(latLng, well));
+                    mClusterManager.addItem(new ClusterMarkerLocation(latLng, well, wellKey));
 //                    mWells.add(well);
 //                    drawMarker(well);
                 }
