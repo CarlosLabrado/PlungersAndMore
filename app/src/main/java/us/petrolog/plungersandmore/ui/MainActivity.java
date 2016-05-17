@@ -98,6 +98,8 @@ public class MainActivity extends FirebaseLoginBaseActivity
 
     private Handler mHandler;
 
+    private String mUserPID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,8 +112,11 @@ public class MainActivity extends FirebaseLoginBaseActivity
         mFirebaseRef = new Firebase(Constants.FIREBASE_URL);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String encodedEmail = sp.getString(Constants.KEY_EMAIL, null);
-        mUserRef = new Firebase(Constants.FIREBASE_URL_USERS).child(encodedEmail);
+        mUserPID = sp.getString(Constants.KEY_USER_PID, null);
+        mUserRef = new Firebase(Constants.FIREBASE_URL_USERS).child(mUserPID);
+
+        LogUtil.logD(TAG, mUserPID);
+
         /**
          * Add ValueEventListeners to Firebase references
          * to control get data and control behavior and visibility of elements
@@ -295,23 +300,23 @@ public class MainActivity extends FirebaseLoginBaseActivity
         mRecyclerViewWell.setLayoutManager(manager);
 
         Firebase wellRef = new Firebase(Constants.FIREBASE_URL_WELLS);
-        Query query = wellRef;
+        Query query = wellRef.orderByChild("users").equalTo("z@gmail.com");
 
 
-        wellRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot usersSnapshot) {
-                for (DataSnapshot userSnapshot : usersSnapshot.getChildren()) {
-                    Well well = userSnapshot.getValue(Well.class);
-                    boolean carlos = false;
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
+//        wellRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot usersSnapshot) {
+//                for (DataSnapshot userSnapshot : usersSnapshot.getChildren()) {
+//                    Well well = userSnapshot.getValue(Well.class);
+//                    boolean carlos = false;
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(FirebaseError firebaseError) {
+//
+//            }
+//        });
 
         mRecycleViewAdapter = new FirebaseRecyclerAdapter<Well, WellListHolder>(Well.class, R.layout.item_well, WellListHolder.class, query) {
             @Override

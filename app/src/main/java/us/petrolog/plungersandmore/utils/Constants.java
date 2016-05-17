@@ -20,6 +20,7 @@ public class Constants {
     public static final String FIREBASE_URL_USERS = FIREBASE_URL + "/" + FIREBASE_LOCATION_USERS;
 
     public static final String KEY_EMAIL = "EMAIL";
+    public static final String KEY_USER_PID = "USER_PUSH_ID";
 
     /**
      * Constants for Firebase object properties

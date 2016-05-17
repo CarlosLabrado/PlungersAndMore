@@ -19,6 +19,7 @@ import com.firebase.ui.auth.core.FirebaseLoginBaseActivity;
 import com.firebase.ui.auth.core.FirebaseLoginError;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -79,13 +80,12 @@ public class LoginActivity extends FirebaseLoginBaseActivity {
     @Override
     public void onFirebaseLoggedIn(AuthData authData) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor spe = sp.edit();
+        final SharedPreferences.Editor spe = sp.edit();
         final String unprocessedEmail;
 
         unprocessedEmail = authData.getProviderData().get("email").toString().toLowerCase();
 
         final String encodedEmail = Utils.encodeEmail(unprocessedEmail);
-        spe.putString(Constants.KEY_EMAIL, encodedEmail).apply();
 
         final String userName = (String) authData.getProviderData().get(Constants.PROVIDER_DATA_DISPLAY_NAME);
 
@@ -104,6 +104,12 @@ public class LoginActivity extends FirebaseLoginBaseActivity {
 
                     User newUser = new User(userName, unprocessedEmail, timestampJoined);
                     mFirebaseRef.child(Constants.FIREBASE_LOCATION_USERS).push().setValue(newUser);
+                    spe.putString(Constants.KEY_USER_PID, mFirebaseRef.getKey()
+                    ).apply();
+
+                } else {
+                    String userPID = (String) ((Map.Entry) ((HashMap) dataSnapshot.getValue()).entrySet().toArray()[0]).getKey();
+                    spe.putString(Constants.KEY_USER_PID, userPID).apply();
                 }
             }
 
