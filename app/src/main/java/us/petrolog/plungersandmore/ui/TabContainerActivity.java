@@ -9,12 +9,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
 import java.util.Stack;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
 import us.petrolog.plungersandmore.R;
+import us.petrolog.plungersandmore.model.Well;
+import us.petrolog.plungersandmore.utils.Constants;
 import us.petrolog.plungersandmore.utils.LogUtil;
 
 /**
@@ -30,6 +37,10 @@ public class TabContainerActivity extends AppCompatActivity implements BottomNav
     private static final String TAG = TabContainerActivity.class.getSimpleName();
     private static Stack<Integer> mTabStack;
 
+    public String mCurrentWellStringRef;
+
+    Well mWell;
+
     public TabContainerActivity() {
         // Required empty public constructor
     }
@@ -42,6 +53,27 @@ public class TabContainerActivity extends AppCompatActivity implements BottomNav
 
         /** toolBar **/
         setUpToolBar();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras == null) {
+            mCurrentWellStringRef = null;
+        } else {
+            mCurrentWellStringRef = extras.getString(Constants.EXTRA_WELL_FULL_REFERENCE);
+        }
+
+        Firebase firebase = new Firebase(mCurrentWellStringRef);
+        firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mWell = dataSnapshot.getValue(Well.class);
+                setActionBarTitle(mWell.getName().toString(), null, true);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
 
         mTabStack = new Stack<>();
 
@@ -114,7 +146,8 @@ public class TabContainerActivity extends AppCompatActivity implements BottomNav
         mTabStack.push(position);
         switch (position) {
             case 0:
-                fragment = new CurrentStatusFragment();
+                new CurrentStatusFragment();
+                fragment = CurrentStatusFragment.newInstance(mCurrentWellStringRef);
                 break;
             case 1:
                 fragment = new HistoricalCyclesFragment();

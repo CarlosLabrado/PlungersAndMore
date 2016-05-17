@@ -57,6 +57,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 
@@ -112,12 +113,16 @@ public class MainActivity extends FirebaseLoginBaseActivity
 
     LatLngBounds mBounds;
 
+    public static Bus mBus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        mBus = new Bus();
+        mBus.register(this);
 
         /** toolBar **/
         setUpToolBar();
@@ -227,6 +232,7 @@ public class MainActivity extends FirebaseLoginBaseActivity
                 listView.setName(well.getName());
                 listView.setState(String.valueOf(well.getCurrentStatus().getCyclesCompleted()));
             }
+
         };
 
         mRecyclerViewWell.setAdapter(mRecycleViewAdapter);
@@ -317,9 +323,20 @@ public class MainActivity extends FirebaseLoginBaseActivity
 
         mRecycleViewAdapter = new FirebaseRecyclerAdapter<Well, WellListHolder>(Well.class, R.layout.item_well, WellListHolder.class, query) {
             @Override
-            public void populateViewHolder(WellListHolder listView, Well well, int position) {
+            public void populateViewHolder(WellListHolder listView, Well well, final int position) {
                 listView.setName(well.getName());
                 listView.setState(String.valueOf(well.getCurrentStatus().getCyclesCompleted()));
+
+                listView.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), "message " + position, Toast.LENGTH_SHORT).show();
+                        String fullWellReference = mRecycleViewAdapter.getRef(position).toString();
+
+                        startTabActivity(fullWellReference);
+
+                    }
+                });
             }
         };
 
@@ -491,7 +508,7 @@ public class MainActivity extends FirebaseLoginBaseActivity
 //                    drawMarker(well);
                 }
                 mBounds = boundsBuilder.build();
-                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(mBounds, 9));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(mBounds, 10));
 
             }
 
@@ -641,10 +658,16 @@ public class MainActivity extends FirebaseLoginBaseActivity
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
         mLatLng = new LatLng(currentLatitude, currentLongitude);
-        CameraUpdate cameraUpdateFactory = CameraUpdateFactory.newLatLngZoom(mLatLng, 17);
+        CameraUpdate cameraUpdateFactory = CameraUpdateFactory.newLatLngZoom(mLatLng, 15);
         mMap.animateCamera(cameraUpdateFactory);
         LogUtil.logE(TAG, "ACCURACY " + String.valueOf(location.getAccuracy()));
 
+    }
+
+    public void startTabActivity(String reference) {
+        Intent intent = new Intent(this, TabContainerActivity.class);
+        intent.putExtra(Constants.EXTRA_WELL_FULL_REFERENCE, reference);
+        startActivity(intent);
     }
 
     @Override
@@ -682,9 +705,12 @@ public class MainActivity extends FirebaseLoginBaseActivity
             mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mView.getContext(), "message", Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+
+        public View getView() {
+            return mView;
         }
 
         public void setName(String name) {
