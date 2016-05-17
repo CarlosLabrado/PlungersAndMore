@@ -171,6 +171,12 @@ public class TabContainerActivity extends AppCompatActivity implements BottomNav
         }
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
+
     /**
      * If we press back we kill the fragment and the last fragment shows on the container, so we
      * also have to show the tab that that container had.

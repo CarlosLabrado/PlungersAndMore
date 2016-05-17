@@ -144,8 +144,10 @@ public class HistoricalCyclesFragment extends Fragment {
         Runnable chartAction = new Runnable() {
             @Override
             public void run() {
-                mTip.prepare(mChart.getEntriesArea(0).get(3), mValues[0][3]);
-                mChart.showTooltip(mTip, true);
+                if (isFragmentUIActive()) {
+                    mTip.prepare(mChart.getEntriesArea(0).get(3), mValues[0][3]);
+                    mChart.showTooltip(mTip, true);
+                }
             }
         };
 
@@ -156,5 +158,10 @@ public class HistoricalCyclesFragment extends Fragment {
         mChart.show(anim);
 
     }
+
+    public boolean isFragmentUIActive() {
+        return isAdded() && !isDetached() && !isRemoving();
+    }
+
 
 }
