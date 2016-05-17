@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,8 +50,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.ArrayList;
 
@@ -58,6 +65,7 @@ import butterknife.ButterKnife;
 import us.petrolog.plungersandmore.R;
 import us.petrolog.plungersandmore.model.User;
 import us.petrolog.plungersandmore.model.Well;
+import us.petrolog.plungersandmore.ui.custom.ClusterMarkerLocation;
 import us.petrolog.plungersandmore.utils.Constants;
 import us.petrolog.plungersandmore.utils.LogUtil;
 
@@ -99,6 +107,11 @@ public class MainActivity extends FirebaseLoginBaseActivity
     private Handler mHandler;
 
     private String mUserPID;
+
+    ClusterManager<ClusterMarkerLocation> mClusterManager;
+
+    LatLngBounds mBounds;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -300,23 +313,7 @@ public class MainActivity extends FirebaseLoginBaseActivity
         mRecyclerViewWell.setLayoutManager(manager);
 
         Firebase wellRef = new Firebase(Constants.FIREBASE_URL_WELLS);
-        Query query = wellRef.orderByChild("users").equalTo("z@gmail.com");
-
-
-//        wellRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot usersSnapshot) {
-//                for (DataSnapshot userSnapshot : usersSnapshot.getChildren()) {
-//                    Well well = userSnapshot.getValue(Well.class);
-//                    boolean carlos = false;
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(FirebaseError firebaseError) {
-//
-//            }
-//        });
+        Query query = wellRef;
 
         mRecycleViewAdapter = new FirebaseRecyclerAdapter<Well, WellListHolder>(Well.class, R.layout.item_well, WellListHolder.class, query) {
             @Override
@@ -329,53 +326,6 @@ public class MainActivity extends FirebaseLoginBaseActivity
         mRecyclerViewWell.setAdapter(mRecycleViewAdapter);
     }
 
-//    private void generateTestWells() {
-//        //String userEmail = (String) mFirebaseRef.getAuth().getProviderData().get("email");
-//
-//        Calendar c = Calendar.getInstance();
-//        c.getTimeInMillis();
-//        Cycle cycle = new Cycle(new Open(1521, 1000, 100, c.getTimeInMillis()), new ShutIn(1521, 1000, 100, c.getTimeInMillis()), c.getTimeInMillis());
-//
-//        HashMap<String, Cycle> cycles = new HashMap<>();
-//        cycles.put("pop", cycle);
-//
-//        Well well = new Well("uno",
-//                new CurrentStatus(1234, 1000, 20, 2152, 100),
-//                cycles,
-//                new us.petrolog.plungersandmore.model.Location(28.6752758, -106.1404511),
-//                null);
-//        Well well2 = new Well("dos",
-//                new CurrentStatus(1234, 1000, 20, 2152, 100),
-//                cycles,
-//                new us.petrolog.plungersandmore.model.Location(28.6802217, -106.1182286),
-//                null);
-//        Well well3 = new Well("tres",
-//                new CurrentStatus(1234, 1000, 20, 2152, 100),
-//                cycles,
-//                new us.petrolog.plungersandmore.model.Location(28.6756834, -106.1366093),
-//                null);
-//        Well well4 = new Well("cuatro",
-//                new CurrentStatus(1234, 1000, 20, 2152, 100),
-//                cycles,
-//                new us.petrolog.plungersandmore.model.Location(28.6802217, -106.1182286),
-//                null);
-//        Well well5 = new Well("cinco",
-//                new CurrentStatus(1234, 1000, 20, 2152, 100),
-//                cycles,
-//                new us.petrolog.plungersandmore.model.Location(28.6735469, -106.1384236),
-//                null);
-//        Well well6 = new Well("seis",
-//                new CurrentStatus(1234, 1000, 20, 2152, 100),
-//                cycles,
-//                new us.petrolog.plungersandmore.model.Location(28.6738751, -106.1303234),
-//                null);
-//        mFirebaseRef.child("wellsTest").push().setValue(well);
-//        mFirebaseRef.child("wellsTest").push().setValue(well2);
-//        mFirebaseRef.child("wellsTest").push().setValue(well3);
-//        mFirebaseRef.child("wellsTest").push().setValue(well4);
-//        mFirebaseRef.child("wellsTest").push().setValue(well5);
-//        mFirebaseRef.child("wellsTest").push().setValue(well6);
-//    }
 
     @Override
     public void onBackPressed() {
@@ -479,10 +429,45 @@ public class MainActivity extends FirebaseLoginBaseActivity
 
         mMap.setMyLocationEnabled(true);
 
-//        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mClusterManager = new ClusterManager<ClusterMarkerLocation>(this, mMap);
+        mClusterManager.setRenderer(new OwnIconRendered(this, mMap, mClusterManager));
+        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterMarkerLocation>() {
+            @Override
+            public boolean onClusterItemClick(ClusterMarkerLocation clusterMarkerLocation) {
+                Toast.makeText(MainActivity.this, "Cluster item clicked", Toast.LENGTH_SHORT).show();
+//                mDeviceClicked = clusterMarkerLocation.getDevice();
+//                mButtonGoToDetail.show();
+                return false;
+            }
+        });
+        mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<ClusterMarkerLocation>() {
+            @Override
+            public void onClusterItemInfoWindowClick(ClusterMarkerLocation clusterMarkerLocation) {
+                Toast.makeText(MainActivity.this, "Cluster item  INFO clicked", Toast.LENGTH_SHORT).show();
+
+//                Device device = clusterMarkerLocation.getDevice();
+//                MainActivity.mBus.post(new StartDetailFragmentEvent(device.getRemoteDeviceId(), device.getName(), device.getLocation()));
+
+            }
+        });
+        mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<ClusterMarkerLocation>() {
+            @Override
+            public boolean onClusterClick(Cluster<ClusterMarkerLocation> cluster) {
+                Log.d(TAG, "cluster click click");
+                return false;
+            }
+        });
+        mMap.setOnCameraChangeListener(mClusterManager);
+        mMap.setOnInfoWindowClickListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+//                mButtonGoToDetail.hide();
+            }
+        });
+
     }
 
     private void populateMapArray() {
@@ -490,14 +475,24 @@ public class MainActivity extends FirebaseLoginBaseActivity
 
         mWells = new ArrayList<>();
 
+        final LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+
+
         wellRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Well well = postSnapshot.getValue(Well.class);
-                    mWells.add(well);
-                    drawMarker(well);
+                    LatLng latLng = new LatLng(well.getLocation().getLat(), well.getLocation().getLon());
+                    boundsBuilder.include(latLng);
+
+                    mClusterManager.addItem(new ClusterMarkerLocation(latLng, well));
+//                    mWells.add(well);
+//                    drawMarker(well);
                 }
+                mBounds = boundsBuilder.build();
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(mBounds, 9));
+
             }
 
             @Override
@@ -506,6 +501,52 @@ public class MainActivity extends FirebaseLoginBaseActivity
             }
         });
 
+
+    }
+
+    /**
+     * Is used by the cluster to render custom markers
+     */
+    class OwnIconRendered extends DefaultClusterRenderer<ClusterMarkerLocation> {
+
+        public OwnIconRendered(Context context, GoogleMap map,
+                               ClusterManager<ClusterMarkerLocation> clusterManager) {
+            super(context, map, clusterManager);
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(ClusterMarkerLocation item, MarkerOptions markerOptions) {
+            BitmapDrawable bitmapDraw = null;
+
+            int height = 60;
+            int width = 50;
+            int deviceStatus = item.getWell().getCurrentStatus().getState();
+
+//            switch (deviceStatus) {
+//                case 0: // No data
+//                    bitmapDraw = (BitmapDrawable) getResources().getDrawable(R.drawable.loc_black_pin);
+//                    break;
+//                case 1: // active
+//                    bitmapDraw = (BitmapDrawable) getResources().getDrawable(R.drawable.loc_green_pin);
+//                    break;
+//                case 2: // Inactive
+//                    bitmapDraw = (BitmapDrawable) getResources().getDrawable(R.drawable.loc_yellow_pin);
+//                    break;
+//                case 3: // Offline
+//                    bitmapDraw = (BitmapDrawable) getResources().getDrawable(R.drawable.loc_grey_pin);
+//                    break;
+//                case 4: // Alert
+//                    bitmapDraw = (BitmapDrawable) getResources().getDrawable(R.drawable.loc_red_pin);
+//                    break;
+//                default:
+//                    bitmapDraw = (BitmapDrawable) getResources().getDrawable(R.drawable.loc_pin);
+//                    break;
+//            }
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker());
+            //markerOptions.snippet(item.getDevice().);
+            markerOptions.title(item.getWell().getName());
+            super.onBeforeClusterItemRendered(item, markerOptions);
+        }
     }
 
     private void drawMarker(Well well) {
