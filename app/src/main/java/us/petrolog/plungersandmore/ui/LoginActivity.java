@@ -19,7 +19,6 @@ import com.firebase.ui.auth.core.FirebaseLoginBaseActivity;
 import com.firebase.ui.auth.core.FirebaseLoginError;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,7 +27,6 @@ import us.petrolog.plungersandmore.R;
 import us.petrolog.plungersandmore.model.User;
 import us.petrolog.plungersandmore.utils.Constants;
 import us.petrolog.plungersandmore.utils.LogUtil;
-import us.petrolog.plungersandmore.utils.Utils;
 
 public class LoginActivity extends FirebaseLoginBaseActivity {
     @Bind(R.id.buttonLogin)
@@ -78,21 +76,19 @@ public class LoginActivity extends FirebaseLoginBaseActivity {
     }
 
     @Override
-    public void onFirebaseLoggedIn(AuthData authData) {
+    public void onFirebaseLoggedIn(final AuthData authData) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         final SharedPreferences.Editor spe = sp.edit();
         final String unprocessedEmail;
 
         unprocessedEmail = authData.getProviderData().get("email").toString().toLowerCase();
 
-        final String encodedEmail = Utils.encodeEmail(unprocessedEmail);
-
         final String userName = (String) authData.getProviderData().get(Constants.PROVIDER_DATA_DISPLAY_NAME);
 
         Firebase usersRef = new Firebase(Constants.FIREBASE_URL_USERS);
         Query query = usersRef;
 
-        query = usersRef.orderByChild("email").equalTo(unprocessedEmail);
+        query = usersRef.child(authData.getUid());
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -103,13 +99,14 @@ public class LoginActivity extends FirebaseLoginBaseActivity {
                     timestampJoined.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
 
                     User newUser = new User(userName, unprocessedEmail, timestampJoined);
-                    mFirebaseRef.child(Constants.FIREBASE_LOCATION_USERS).push().setValue(newUser);
-                    spe.putString(Constants.KEY_USER_PID, mFirebaseRef.getKey()
-                    ).apply();
+                    mFirebaseRef.child(Constants.FIREBASE_LOCATION_USERS).child(authData.getUid()).setValue(newUser);
+                    spe.putString(Constants.KEY_USER_PID, authData.getUid()).apply();
+                    startMainActivity();
 
                 } else {
-                    String userPID = (String) ((Map.Entry) ((HashMap) dataSnapshot.getValue()).entrySet().toArray()[0]).getKey();
-                    spe.putString(Constants.KEY_USER_PID, userPID).apply();
+                    //String userPID = (String) ((Map.Entry) ((HashMap) dataSnapshot.getValue()).entrySet().toArray()[0]).getKey();
+                    spe.putString(Constants.KEY_USER_PID, authData.getUid()).apply();
+                    startMainActivity();
                 }
             }
 
@@ -119,7 +116,9 @@ public class LoginActivity extends FirebaseLoginBaseActivity {
             }
         });
 
+    }
 
+    public void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
