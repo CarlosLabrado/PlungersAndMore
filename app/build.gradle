@@ -84,4 +84,6 @@ dependencies {
     //tabbed view
     compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:1.0.7'
 
+    // History Chart
+    compile 'com.diogobernardino:williamchart:2.2'
 }
