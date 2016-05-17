@@ -328,7 +328,7 @@ public class MainActivity extends FirebaseLoginBaseActivity
         Firebase wellRef = new Firebase(Constants.FIREBASE_URL_WELLS);
         Query query = wellRef;
         if (!mEditTextSearch.getText().toString().isEmpty()) {
-            query = wellRef.orderByChild("name").equalTo(mEditTextSearch.getText().toString());
+            query = wellRef.orderByChild("name").startAt(mEditTextSearch.getText().toString()).endAt(mEditTextSearch.getText().toString() + "~");
         }
 
         mRecyclerViewWell.removeAllViews();
