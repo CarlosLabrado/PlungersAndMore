@@ -1,22 +1,27 @@
 package us.petrolog.plungersandmore.model;
 
-import java.util.List;
-
 /**
  * Created by Vazh on 11/5/2016.
  */
 public class Lease {
+    private Location location;
+
     private String mName;
-    private Location mLocation;
-    private List<User> mUsers;
 
     public Lease() {
     }
 
-    public Lease(String name, Location location, List<User> users) {
+    public Lease(Location location, String name) {
+        this.location = location;
         mName = name;
-        mLocation = location;
-        mUsers = users;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public String getName() {
@@ -25,21 +30,5 @@ public class Lease {
 
     public void setName(String name) {
         mName = name;
-    }
-
-    public Location getLocation() {
-        return mLocation;
-    }
-
-    public void setLocation(Location location) {
-        mLocation = location;
-    }
-
-    public List<User> getUsers() {
-        return mUsers;
-    }
-
-    public void setUsers(List<User> users) {
-        mUsers = users;
     }
 }

@@ -52,16 +52,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import us.petrolog.plungersandmore.R;
-import us.petrolog.plungersandmore.model.CurrentStatus;
-import us.petrolog.plungersandmore.model.Cycle;
-import us.petrolog.plungersandmore.model.Open;
-import us.petrolog.plungersandmore.model.ShutIn;
 import us.petrolog.plungersandmore.model.User;
 import us.petrolog.plungersandmore.model.Well;
 import us.petrolog.plungersandmore.utils.Constants;
@@ -213,7 +207,7 @@ public class MainActivity extends FirebaseLoginBaseActivity
             @Override
             public void populateViewHolder(WellListHolder listView, Well well, int position) {
                 listView.setName(well.getName());
-                listView.setState(String.valueOf(well.getCurrentStatus().getCasingPressure()));
+                listView.setState(String.valueOf(well.getCurrentStatus().getCyclesCompleted()));
             }
         };
 
@@ -304,64 +298,79 @@ public class MainActivity extends FirebaseLoginBaseActivity
         Query query = wellRef;
 
 
+        wellRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot usersSnapshot) {
+                for (DataSnapshot userSnapshot : usersSnapshot.getChildren()) {
+                    Well well = userSnapshot.getValue(Well.class);
+                    boolean carlos = false;
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
         mRecycleViewAdapter = new FirebaseRecyclerAdapter<Well, WellListHolder>(Well.class, R.layout.item_well, WellListHolder.class, query) {
             @Override
             public void populateViewHolder(WellListHolder listView, Well well, int position) {
                 listView.setName(well.getName());
-                listView.setState(String.valueOf(well.getCurrentStatus().getCasingPressure()));
+                listView.setState(String.valueOf(well.getCurrentStatus().getCyclesCompleted()));
             }
         };
 
         mRecyclerViewWell.setAdapter(mRecycleViewAdapter);
     }
 
-    private void generateTestWells() {
-        //String userEmail = (String) mFirebaseRef.getAuth().getProviderData().get("email");
-
-        Calendar c = Calendar.getInstance();
-        c.getTimeInMillis();
-        Cycle cycle = new Cycle(new Open(1521, 1000, 100, c.getTimeInMillis()), new ShutIn(1521, 1000, 100, c.getTimeInMillis()), c.getTimeInMillis());
-
-        HashMap<String, Cycle> cycles = new HashMap<>();
-        cycles.put("pop", cycle);
-
-        Well well = new Well("uno",
-                new CurrentStatus(1234, 1000, 20, 2152, 100),
-                cycles,
-                new us.petrolog.plungersandmore.model.Location(28.6752758, -106.1404511),
-                null);
-        Well well2 = new Well("dos",
-                new CurrentStatus(1234, 1000, 20, 2152, 100),
-                cycles,
-                new us.petrolog.plungersandmore.model.Location(28.6802217, -106.1182286),
-                null);
-        Well well3 = new Well("tres",
-                new CurrentStatus(1234, 1000, 20, 2152, 100),
-                cycles,
-                new us.petrolog.plungersandmore.model.Location(28.6756834, -106.1366093),
-                null);
-        Well well4 = new Well("cuatro",
-                new CurrentStatus(1234, 1000, 20, 2152, 100),
-                cycles,
-                new us.petrolog.plungersandmore.model.Location(28.6802217, -106.1182286),
-                null);
-        Well well5 = new Well("cinco",
-                new CurrentStatus(1234, 1000, 20, 2152, 100),
-                cycles,
-                new us.petrolog.plungersandmore.model.Location(28.6735469, -106.1384236),
-                null);
-        Well well6 = new Well("seis",
-                new CurrentStatus(1234, 1000, 20, 2152, 100),
-                cycles,
-                new us.petrolog.plungersandmore.model.Location(28.6738751, -106.1303234),
-                null);
-        mFirebaseRef.child("wellsTest").push().setValue(well);
-        mFirebaseRef.child("wellsTest").push().setValue(well2);
-        mFirebaseRef.child("wellsTest").push().setValue(well3);
-        mFirebaseRef.child("wellsTest").push().setValue(well4);
-        mFirebaseRef.child("wellsTest").push().setValue(well5);
-        mFirebaseRef.child("wellsTest").push().setValue(well6);
-    }
+//    private void generateTestWells() {
+//        //String userEmail = (String) mFirebaseRef.getAuth().getProviderData().get("email");
+//
+//        Calendar c = Calendar.getInstance();
+//        c.getTimeInMillis();
+//        Cycle cycle = new Cycle(new Open(1521, 1000, 100, c.getTimeInMillis()), new ShutIn(1521, 1000, 100, c.getTimeInMillis()), c.getTimeInMillis());
+//
+//        HashMap<String, Cycle> cycles = new HashMap<>();
+//        cycles.put("pop", cycle);
+//
+//        Well well = new Well("uno",
+//                new CurrentStatus(1234, 1000, 20, 2152, 100),
+//                cycles,
+//                new us.petrolog.plungersandmore.model.Location(28.6752758, -106.1404511),
+//                null);
+//        Well well2 = new Well("dos",
+//                new CurrentStatus(1234, 1000, 20, 2152, 100),
+//                cycles,
+//                new us.petrolog.plungersandmore.model.Location(28.6802217, -106.1182286),
+//                null);
+//        Well well3 = new Well("tres",
+//                new CurrentStatus(1234, 1000, 20, 2152, 100),
+//                cycles,
+//                new us.petrolog.plungersandmore.model.Location(28.6756834, -106.1366093),
+//                null);
+//        Well well4 = new Well("cuatro",
+//                new CurrentStatus(1234, 1000, 20, 2152, 100),
+//                cycles,
+//                new us.petrolog.plungersandmore.model.Location(28.6802217, -106.1182286),
+//                null);
+//        Well well5 = new Well("cinco",
+//                new CurrentStatus(1234, 1000, 20, 2152, 100),
+//                cycles,
+//                new us.petrolog.plungersandmore.model.Location(28.6735469, -106.1384236),
+//                null);
+//        Well well6 = new Well("seis",
+//                new CurrentStatus(1234, 1000, 20, 2152, 100),
+//                cycles,
+//                new us.petrolog.plungersandmore.model.Location(28.6738751, -106.1303234),
+//                null);
+//        mFirebaseRef.child("wellsTest").push().setValue(well);
+//        mFirebaseRef.child("wellsTest").push().setValue(well2);
+//        mFirebaseRef.child("wellsTest").push().setValue(well3);
+//        mFirebaseRef.child("wellsTest").push().setValue(well4);
+//        mFirebaseRef.child("wellsTest").push().setValue(well5);
+//        mFirebaseRef.child("wellsTest").push().setValue(well6);
+//    }
 
     @Override
     public void onBackPressed() {
@@ -472,7 +481,7 @@ public class MainActivity extends FirebaseLoginBaseActivity
     }
 
     private void populateMapArray() {
-        Firebase wellRef = new Firebase("https://plungersandmore.firebaseio.com/wellsTest");
+        Firebase wellRef = new Firebase(Constants.FIREBASE_URL_WELLS);
 
         mWells = new ArrayList<>();
 

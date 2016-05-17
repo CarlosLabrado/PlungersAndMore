@@ -1,65 +1,90 @@
 package us.petrolog.plungersandmore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by Vazh on 11/5/2016.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CurrentStatus {
-    private int mCasingPressure;
-    private int mCyclesCompleted;
-    private int mCyclesMissed;
-    private int mLinePressure;
-    private int mTubingPressure;
+    private int CyclesCompleted;
+    private int CyclesMissed;
+    private int Pc;
+    private int Pl;
+    private int Pt;
+    private int State;
+    private String timeStamp;
 
     public CurrentStatus() {
     }
 
-    public CurrentStatus(int casingPressure, int cyclesCompleted, int cyclesMissed, int linePressure, int tubingPressure) {
-        mCasingPressure = casingPressure;
-        mCyclesCompleted = cyclesCompleted;
-        mCyclesMissed = cyclesMissed;
-        mLinePressure = linePressure;
-        mTubingPressure = tubingPressure;
-    }
-
-    public int getCasingPressure() {
-        return mCasingPressure;
-    }
-
-    public void setCasingPressure(int casingPressure) {
-        mCasingPressure = casingPressure;
+    public CurrentStatus(int cyclesCompleted, int cyclesMissed, int pc, int pl, int pt, int state, String timeStamp) {
+        CyclesCompleted = cyclesCompleted;
+        CyclesMissed = cyclesMissed;
+        Pc = pc;
+        Pl = pl;
+        Pt = pt;
+        State = state;
+        this.timeStamp = timeStamp;
     }
 
     public int getCyclesCompleted() {
-        return mCyclesCompleted;
+        return CyclesCompleted;
     }
 
     public void setCyclesCompleted(int cyclesCompleted) {
-        mCyclesCompleted = cyclesCompleted;
+        CyclesCompleted = cyclesCompleted;
     }
 
     public int getCyclesMissed() {
-        return mCyclesMissed;
+        return CyclesMissed;
     }
 
     public void setCyclesMissed(int cyclesMissed) {
-        mCyclesMissed = cyclesMissed;
+        CyclesMissed = cyclesMissed;
     }
 
-    public int getLinePressure() {
-        return mLinePressure;
+    public int getPc() {
+        return Pc;
     }
 
-    public void setLinePressure(int linePressure) {
-        mLinePressure = linePressure;
+    public void setPc(int pc) {
+        Pc = pc;
     }
 
-    public int getTubingPressure() {
-        return mTubingPressure;
+    public int getPl() {
+        return Pl;
     }
 
-    public void setTubingPressure(int tubingPressure) {
-        mTubingPressure = tubingPressure;
+    public void setPl(int pl) {
+        Pl = pl;
+    }
+
+    public int getPt() {
+        return Pt;
+    }
+
+    public void setPt(int pt) {
+        Pt = pt;
+    }
+
+    public int getState() {
+        return State;
+    }
+
+    public void setState(int state) {
+        State = state;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }
+
+
 
 

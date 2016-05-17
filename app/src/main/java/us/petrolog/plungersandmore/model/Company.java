@@ -1,46 +1,34 @@
 package us.petrolog.plungersandmore.model;
 
-import java.util.List;
-
 /**
  * Created by Vazh on 11/5/2016.
  */
 public class Company {
 
-    private String mName;
-    private Location mLocation;
-    private List<User> mUsers;
+    private Location location;
+    private String name;
 
     public Company() {
     }
 
-    public Company(String name, Location location, List<User> users) {
-        mName = name;
-        mLocation = location;
-        mUsers = users;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public void setName(String name) {
-        mName = name;
+    public Company(Location location, String name) {
+        this.location = location;
+        this.name = name;
     }
 
     public Location getLocation() {
-        return mLocation;
+        return location;
     }
 
     public void setLocation(Location location) {
-        mLocation = location;
+        this.location = location;
     }
 
-    public List<User> getUsers() {
-        return mUsers;
+    public String getName() {
+        return name;
     }
 
-    public void setUsers(List<User> users) {
-        mUsers = users;
+    public void setName(String name) {
+        this.name = name;
     }
 }

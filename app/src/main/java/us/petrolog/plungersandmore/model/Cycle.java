@@ -4,17 +4,18 @@ package us.petrolog.plungersandmore.model;
  * Created by Vazh on 11/5/2016.
  */
 public class Cycle {
-    private long mTimeStamp;
     private Open mOpen;
     private ShutIn mShutIn;
+    private long mTimeStamp;
+
 
     public Cycle() {
     }
 
-    public Cycle(long timeStamp, Open open, ShutIn shutIn) {
-        mTimeStamp = timeStamp;
+    public Cycle(Open open, ShutIn shutIn, long timeStamp) {
         mOpen = open;
         mShutIn = shutIn;
+        mTimeStamp = timeStamp;
     }
 
     public long getTimeStamp() {

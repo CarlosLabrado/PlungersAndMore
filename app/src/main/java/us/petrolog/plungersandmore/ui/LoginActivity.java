@@ -11,6 +11,7 @@ import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.firebase.client.ServerValue;
 import com.firebase.client.ValueEventListener;
 import com.firebase.ui.auth.core.AuthProviderType;
@@ -79,7 +80,7 @@ public class LoginActivity extends FirebaseLoginBaseActivity {
     public void onFirebaseLoggedIn(AuthData authData) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor spe = sp.edit();
-        String unprocessedEmail;
+        final String unprocessedEmail;
 
         unprocessedEmail = authData.getProviderData().get("email").toString().toLowerCase();
 
@@ -88,18 +89,21 @@ public class LoginActivity extends FirebaseLoginBaseActivity {
 
         final String userName = (String) authData.getProviderData().get(Constants.PROVIDER_DATA_DISPLAY_NAME);
 
-             /* If no user exists, make a user */
-        final Firebase userLocation = new Firebase(Constants.FIREBASE_URL_USERS).child(encodedEmail);
-        userLocation.addListenerForSingleValueEvent(new ValueEventListener() {
+        Firebase usersRef = new Firebase(Constants.FIREBASE_URL_USERS);
+        Query query = usersRef;
+
+        query = usersRef.orderByChild("email").equalTo(unprocessedEmail);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                            /* If nothing is there ...*/
+                // User does not exists, so we create it
                 if (dataSnapshot.getValue() == null) {
                     HashMap<String, Object> timestampJoined = new HashMap<>();
                     timestampJoined.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
 
-                    User newUser = new User(userName, encodedEmail, timestampJoined, null);
-                    userLocation.setValue(newUser);
+                    User newUser = new User(userName, unprocessedEmail, timestampJoined);
+                    mFirebaseRef.child(Constants.FIREBASE_LOCATION_USERS).push().setValue(newUser);
                 }
             }
 
@@ -108,6 +112,7 @@ public class LoginActivity extends FirebaseLoginBaseActivity {
                 LogUtil.logD(TAG, getString(R.string.log_error_occurred) + firebaseError.getMessage());
             }
         });
+
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

@@ -1,66 +1,47 @@
 package us.petrolog.plungersandmore.model;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Created by Vazh on 9/5/2016.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Well {
 
-    private String mName;
-    private CurrentStatus mCurrentStatus;
-    private List<Cycle> mCycles;
-    private Location mLocation;
-    private List<User> mUsers;
+    private CurrentStatus currentStatus;
+    private Location location;
+    private String name;
 
     public Well() {
     }
 
-    public Well(String name, CurrentStatus currentStatus, List<Cycle> cycles, Location location, List<User> users) {
-        mName = name;
-        mCurrentStatus = currentStatus;
-        mCycles = cycles;
-        mLocation = location;
-        mUsers = users;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public void setName(String name) {
-        mName = name;
+    public Well(CurrentStatus currentStatus, Location location, String name) {
+        this.currentStatus = currentStatus;
+        this.location = location;
+        this.name = name;
     }
 
     public CurrentStatus getCurrentStatus() {
-        return mCurrentStatus;
+        return currentStatus;
     }
 
     public void setCurrentStatus(CurrentStatus currentStatus) {
-        mCurrentStatus = currentStatus;
-    }
-
-    public List<Cycle> getCycles() {
-        return mCycles;
-    }
-
-    public void setCycles(List<Cycle> cycles) {
-        mCycles = cycles;
+        this.currentStatus = currentStatus;
     }
 
     public Location getLocation() {
-        return mLocation;
+        return location;
     }
 
     public void setLocation(Location location) {
-        mLocation = location;
+        this.location = location;
     }
 
-    public List<User> getUsers() {
-        return mUsers;
+    public String getName() {
+        return name;
     }
 
-    public void setUsers(List<User> users) {
-        mUsers = users;
+    public void setName(String name) {
+        this.name = name;
     }
 }
