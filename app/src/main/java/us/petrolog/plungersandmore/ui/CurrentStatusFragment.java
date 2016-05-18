@@ -12,18 +12,25 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import us.petrolog.plungersandmore.R;
 import us.petrolog.plungersandmore.model.CurrentStatus;
+import us.petrolog.plungersandmore.model.Well;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link CurrentStatusFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CurrentStatusFragment extends Fragment {
+public class CurrentStatusFragment extends Fragment implements OnMapReadyCallback {
     private static final String ARG_WELL_REF = "wellRef";
     @Bind(R.id.textViewCyclesCompleted)
     TextView mTextViewCyclesCompleted;
@@ -42,6 +49,8 @@ public class CurrentStatusFragment extends Fragment {
 
     private String mParamWellRef;
     Firebase mFirebaseRef;
+
+    private GoogleMap mMap;
 
     public CurrentStatusFragment() {
         // Required empty public constructor
@@ -78,6 +87,10 @@ public class CurrentStatusFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapLite);
+        mapFragment.getMapAsync(this);
+
         mFirebaseRef = new Firebase(mParamWellRef);
         mFirebaseRef.child("currentStatus").addValueEventListener(new ValueEventListener() {
             @Override
@@ -102,6 +115,21 @@ public class CurrentStatusFragment extends Fragment {
             }
         });
 
+        Firebase wellRef = mFirebaseRef;
+        wellRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null) {
+                    Well well = dataSnapshot.getValue(Well.class);
+                    updateLiteMap(well);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
 
         return view;
     }
@@ -110,11 +138,26 @@ public class CurrentStatusFragment extends Fragment {
         return isAdded() && !isDetached() && !isRemoving();
     }
 
+    private void updateLiteMap(Well well) {
+
+        LatLng latLng = new LatLng(well.getLocation().getLat(), well.getLocation().getLon());
+
+        mMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title((String) well.getName()));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f));
+    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
 //        mFirebaseRef.removeEventListener();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
     }
 }

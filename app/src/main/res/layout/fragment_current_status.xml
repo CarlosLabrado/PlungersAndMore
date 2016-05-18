@@ -1,24 +1,27 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="us.petrolog.plungersandmore.ui.CurrentStatusFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              xmlns:map="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context="us.petrolog.plungersandmore.ui.CurrentStatusFragment"
+              android:orientation="horizontal"
+              android:gravity="center_vertical">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
+        android:orientation="vertical"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_gravity="center">
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:layout_margin="16dp">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
+        <GridLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="left|center_vertical"
-            android:layout_marginRight="16dp">
+            android:columnCount="2"
+            android:rowCount="7"
+            >
 
             <TextView
                 android:drawableLeft="@drawable/ic_check_green_24dp"
@@ -33,6 +36,15 @@
                 android:textColor="@color/blue_grey_400"/>
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/textViewCyclesCompleted"
+                style="@style/Base.TextAppearance.AppCompat.Headline"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="right"/>
+
+            <TextView
                 android:drawableLeft="@drawable/ic_close_red_24dp"
                 android:drawableStart="@drawable/ic_close_red_24dp"
                 android:layout_width="wrap_content"
@@ -43,6 +55,15 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
                 android:textColor="@color/blue_grey_400"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/textViewCyclesMissed"
+                style="@style/Base.TextAppearance.AppCompat.Headline"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="right"/>
 
             <TextView
                 android:drawableLeft="@drawable/ic_magnifiying_green_24dp"
@@ -57,6 +78,15 @@
                 android:textColor="@color/blue_grey_400"/>
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/textViewPc"
+                style="@style/Base.TextAppearance.AppCompat.Headline"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="right"/>
+
+            <TextView
                 android:drawableLeft="@drawable/ic_magnifiying_green_24dp"
                 android:drawableStart="@drawable/ic_magnifiying_green_24dp"
                 android:layout_width="wrap_content"
@@ -67,6 +97,15 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
                 android:textColor="@color/blue_grey_400"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/textViewPl"
+                style="@style/Base.TextAppearance.AppCompat.Headline"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="right"/>
 
             <TextView
                 android:drawableLeft="@drawable/ic_magnifiying_green_24dp"
@@ -81,6 +120,15 @@
                 android:textColor="@color/blue_grey_400"/>
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/textViewPt"
+                style="@style/Base.TextAppearance.AppCompat.Headline"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="right"/>
+
+            <TextView
                 android:drawableLeft="@drawable/ic_magnifiying_green_24dp"
                 android:drawableStart="@drawable/ic_magnifiying_green_24dp"
                 android:layout_width="wrap_content"
@@ -93,6 +141,15 @@
                 android:textColor="@color/blue_grey_400"/>
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:id="@+id/textViewState"
+                style="@style/Base.TextAppearance.AppCompat.Headline"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="right"/>
+
+            <TextView
                 android:drawableLeft="@drawable/ic_magnifiying_green_24dp"
                 android:drawableStart="@drawable/ic_magnifiying_green_24dp"
                 android:layout_width="wrap_content"
@@ -102,70 +159,34 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginEnd="16dp"
                 android:textColor="@color/blue_grey_400"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|right"
-            android:gravity="right">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:id="@+id/textViewCyclesCompleted"
-                style="@style/Base.TextAppearance.AppCompat.Headline"
-                android:layout_marginBottom="8dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:id="@+id/textViewCyclesMissed"
-                style="@style/Base.TextAppearance.AppCompat.Headline"
-                android:layout_marginBottom="8dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:id="@+id/textViewPc"
-                style="@style/Base.TextAppearance.AppCompat.Headline"
-                android:layout_marginBottom="8dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:id="@+id/textViewPl"
-                style="@style/Base.TextAppearance.AppCompat.Headline"
-                android:layout_marginBottom="8dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:id="@+id/textViewPt"
-                style="@style/Base.TextAppearance.AppCompat.Headline"
-                android:layout_marginBottom="8dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:id="@+id/textViewState"
-                style="@style/Base.TextAppearance.AppCompat.Headline"
-                android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:id="@+id/textViewTimeStamp"
-                style="@style/Base.TextAppearance.AppCompat.Headline"/>
-        </LinearLayout>
+                style="@style/Base.TextAppearance.AppCompat.Headline"
+                android:layout_gravity="right"/>
+        </GridLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stop and Clear Counters"
+            android:id="@+id/button"/>
+
     </LinearLayout>
 
-</FrameLayout>
+    <fragment
+        android:id="@+id/mapLite"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        map:cameraZoom="13"
+        map:liteMode="true"
+        map:mapType="normal"
+        tools:ignore="MissingPrefix"
+        android:layout_gravity="right|center_vertical"
+        android:layout_weight="1"/>
+
+</LinearLayout>
