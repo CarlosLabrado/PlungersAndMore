@@ -7,73 +7,73 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CurrentStatus {
-    private int CyclesCompleted;
-    private int CyclesMissed;
-    private int Pc;
-    private int Pl;
-    private int Pt;
-    private int State;
+    private int cyclesCompleted;
+    private int cyclesMissed;
+    private int pc;
+    private int pl;
+    private int pt;
+    private int state;
     private String timeStamp;
 
     public CurrentStatus() {
     }
 
     public CurrentStatus(int cyclesCompleted, int cyclesMissed, int pc, int pl, int pt, int state, String timeStamp) {
-        CyclesCompleted = cyclesCompleted;
-        CyclesMissed = cyclesMissed;
-        Pc = pc;
-        Pl = pl;
-        Pt = pt;
-        State = state;
+        this.cyclesCompleted = cyclesCompleted;
+        this.cyclesMissed = cyclesMissed;
+        this.pc = pc;
+        this.pl = pl;
+        this.pt = pt;
+        this.state = state;
         this.timeStamp = timeStamp;
     }
 
     public int getCyclesCompleted() {
-        return CyclesCompleted;
+        return cyclesCompleted;
     }
 
     public void setCyclesCompleted(int cyclesCompleted) {
-        CyclesCompleted = cyclesCompleted;
+        this.cyclesCompleted = cyclesCompleted;
     }
 
     public int getCyclesMissed() {
-        return CyclesMissed;
+        return cyclesMissed;
     }
 
     public void setCyclesMissed(int cyclesMissed) {
-        CyclesMissed = cyclesMissed;
+        this.cyclesMissed = cyclesMissed;
     }
 
     public int getPc() {
-        return Pc;
+        return pc;
     }
 
     public void setPc(int pc) {
-        Pc = pc;
+        this.pc = pc;
     }
 
     public int getPl() {
-        return Pl;
+        return pl;
     }
 
     public void setPl(int pl) {
-        Pl = pl;
+        this.pl = pl;
     }
 
     public int getPt() {
-        return Pt;
+        return pt;
     }
 
     public void setPt(int pt) {
-        Pt = pt;
+        this.pt = pt;
     }
 
     public int getState() {
-        return State;
+        return state;
     }
 
     public void setState(int state) {
-        State = state;
+        this.state = state;
     }
 
     public String getTimeStamp() {
