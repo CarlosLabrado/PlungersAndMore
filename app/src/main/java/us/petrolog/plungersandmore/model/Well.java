@@ -1,11 +1,8 @@
 package us.petrolog.plungersandmore.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 /**
  * Created by Vazh on 9/5/2016.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Well {
 
     private CurrentStatus currentStatus;

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "888788309635",
+    "firebase_url": "https://plungersandmore-711bd.firebaseio.com",
+    "project_id": "plungersandmore-711bd",
+    "storage_bucket": "plungersandmore-711bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:888788309635:android:499fcaa94066cc8b",
+        "android_client_info": {
+          "package_name": "us.petrolog.plungersandmore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "888788309635-8vauft5npjb0p2iibsdk23gt9kfcghhl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "us.petrolog.plungersandmore",
+            "certificate_hash": "EA407AAA76715910055DAA2C78D958EE6287D6F9"
+          }
+        },
+        {
+          "client_id": "888788309635-jij3mqdudsqr2nraiglq3gfkgbac0l9u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3YEs4dIWc50iBuO_ImW6-7GUE1MOWiBU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "888788309635-jij3mqdudsqr2nraiglq3gfkgbac0l9u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

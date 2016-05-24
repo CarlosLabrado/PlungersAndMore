@@ -3,8 +3,9 @@ package us.petrolog.plungersandmore.ui.custom;
 import android.app.Activity;
 import android.view.View;
 
-import com.firebase.client.Query;
-import com.firebase.ui.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.database.Query;
+
 
 /**
  * Created by Vazh on 9/5/2016.

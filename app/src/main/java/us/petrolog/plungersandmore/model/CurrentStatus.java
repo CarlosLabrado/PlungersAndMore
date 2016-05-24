@@ -1,24 +1,22 @@
 package us.petrolog.plungersandmore.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Created by Vazh on 11/5/2016.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CurrentStatus {
-    private int cyclesCompleted;
-    private int cyclesMissed;
-    private int pc;
-    private int pl;
-    private int pt;
-    private int state;
+    private String cyclesCompleted;
+    private String cyclesMissed;
+    private String pc;
+    private String pl;
+    private String pt;
+    private String state;
     private String timeStamp;
 
     public CurrentStatus() {
     }
 
-    public CurrentStatus(int cyclesCompleted, int cyclesMissed, int pc, int pl, int pt, int state, String timeStamp) {
+    public CurrentStatus(String cyclesCompleted, String cyclesMissed, String pc, String pl, String pt, String state, String timeStamp) {
         this.cyclesCompleted = cyclesCompleted;
         this.cyclesMissed = cyclesMissed;
         this.pc = pc;
@@ -28,51 +26,51 @@ public class CurrentStatus {
         this.timeStamp = timeStamp;
     }
 
-    public int getCyclesCompleted() {
+    public String getCyclesCompleted() {
         return cyclesCompleted;
     }
 
-    public void setCyclesCompleted(int cyclesCompleted) {
+    public void setCyclesCompleted(String cyclesCompleted) {
         this.cyclesCompleted = cyclesCompleted;
     }
 
-    public int getCyclesMissed() {
+    public String getCyclesMissed() {
         return cyclesMissed;
     }
 
-    public void setCyclesMissed(int cyclesMissed) {
+    public void setCyclesMissed(String cyclesMissed) {
         this.cyclesMissed = cyclesMissed;
     }
 
-    public int getPc() {
+    public String getPc() {
         return pc;
     }
 
-    public void setPc(int pc) {
+    public void setPc(String pc) {
         this.pc = pc;
     }
 
-    public int getPl() {
+    public String getPl() {
         return pl;
     }
 
-    public void setPl(int pl) {
+    public void setPl(String pl) {
         this.pl = pl;
     }
 
-    public int getPt() {
+    public String getPt() {
         return pt;
     }
 
-    public void setPt(int pt) {
+    public void setPt(String pt) {
         this.pt = pt;
     }
 
-    public int getState() {
+    public String getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(String state) {
         this.state = state;
     }
 

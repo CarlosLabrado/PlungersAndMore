@@ -9,10 +9,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Stack;
 
@@ -58,10 +59,10 @@ public class TabContainerActivity extends AppCompatActivity implements BottomNav
         if (extras == null) {
             mCurrentWellStringRef = null;
         } else {
-            mCurrentWellStringRef = extras.getString(Constants.EXTRA_WELL_FULL_REFERENCE);
+            mCurrentWellStringRef = extras.getString(Constants.EXTRA_WELL_KEY_REFERENCE);
         }
 
-        Firebase firebase = new Firebase(mCurrentWellStringRef);
+        DatabaseReference firebase = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_LOCATION_WELLS).child(mCurrentWellStringRef);
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -70,7 +71,7 @@ public class TabContainerActivity extends AppCompatActivity implements BottomNav
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError firebaseError) {
 
             }
         });

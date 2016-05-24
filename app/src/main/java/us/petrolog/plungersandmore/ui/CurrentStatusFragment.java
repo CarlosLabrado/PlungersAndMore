@@ -8,22 +8,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import us.petrolog.plungersandmore.R;
 import us.petrolog.plungersandmore.model.CurrentStatus;
 import us.petrolog.plungersandmore.model.Well;
+import us.petrolog.plungersandmore.utils.Constants;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,7 +50,7 @@ public class CurrentStatusFragment extends Fragment implements OnMapReadyCallbac
     TextView mTextViewTimeStamp;
 
     private String mParamWellRef;
-    Firebase mFirebaseRef;
+    DatabaseReference mFirebaseRef;
 
     private GoogleMap mMap;
 
@@ -91,7 +93,7 @@ public class CurrentStatusFragment extends Fragment implements OnMapReadyCallbac
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapLite);
         mapFragment.getMapAsync(this);
 
-        mFirebaseRef = new Firebase(mParamWellRef);
+        mFirebaseRef = FirebaseDatabase.getInstance().getReference(Constants.FIREBASE_LOCATION_WELLS).child(mParamWellRef);
         mFirebaseRef.child("currentStatus").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -110,12 +112,12 @@ public class CurrentStatusFragment extends Fragment implements OnMapReadyCallbac
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError firebaseError) {
 
             }
         });
 
-        Firebase wellRef = mFirebaseRef;
+        DatabaseReference wellRef = mFirebaseRef;
         wellRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -126,7 +128,7 @@ public class CurrentStatusFragment extends Fragment implements OnMapReadyCallbac
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError firebaseError) {
 
             }
         });

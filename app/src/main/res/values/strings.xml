@@ -12,6 +12,29 @@
     <string name="log_error_the_read_failed">The read failed: </string>
     <string name="log_error_occurred">"Error occurred: "</string>
 
+
+    <!--Login-->
+    <string name="facebook_label">Facebook</string>
+    <string name="facebook_label_missing_config">Facebook - configuration missing</string>
+    <string name="google_label">Google</string>
+    <string name="google_label_missing_config">Google - configuration missing</string>
+    <string name="google_tos_label">Google TOS</string>
+    <string name="firebase_tos_label">Firebase TOS</string>
+    <string name="tos_header">Terms of Service URL:</string>
+    <string name="unknown_response">Unexpected onActivityResult response code 😐</string>
+    <string name="ok_label">OK</string>
+    <string name="unknown_sign_in_response">Unknown response from AuthUI sign-in 😓</string>
+    <string name="sign_in_cancelled">Sign in cancelled 😔</string>
+    <string name="signed_in_header">You are signed in!</string>
+    <string name="sign_out">Sign out</string>
+    <string name="delete_account_label">Delete account</string>
+    <string name="sign_out_failed">Sign out failed 😨</string>
+    <string name="delete_account_failed">Delete account failed 😨</string>
+    <string name="user_profile_header">User profile:</string>
+    <string name="profile_picture_content_desc">Profile picture</string>
+    <string name="default_theme">Default theme</string>
+    <string name="configuration_required">Configuration is required - see README.md</string>
+
     <!--gps misc-->
     <string name="dialog_cancel">Cancel</string>
     <string name="gps_network_not_enabled">GPS is not enabled</string>
