@@ -10,5 +10,24 @@
         <item name="android:textColor">@color/grey_900</item>
     </style>
 
+    <style name="textViewSettingsTitle" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/grey_900</item>
+    </style>
+
+    <style name="editTextSettingsGrey" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/edit_text_rounded_grey</item>
+        <item name="android:layout_marginRight">4dp</item>
+    </style>
+
+    <style name="editTextSettingsBlue" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/edit_text_rounded_blue</item>
+        <item name="android:layout_marginRight">4dp</item>
+    </style>
+
+    <style name="editTextSettingsRed" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/edit_text_rounded_red</item>
+        <item name="android:layout_marginRight">4dp</item>
+    </style>
+
 
 </resources>

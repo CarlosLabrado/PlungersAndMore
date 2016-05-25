@@ -47,4 +47,19 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hh_mm">hh : mm</string>
+    <string name="fall_time">Fall Time</string>
+    <string name="press_to_enter_value">Press to enter value</string>
+    <string name="btn_change">Change</string>
+    <string name="button_now_using_tubing_pressure_to_open_valve">Now Using tubing pressure to open valve</string>
+    <string name="settings_tubing_pressure">Tubing Pressure</string>
+    <string name="settings_casing_pressure">Casing Pressure</string>
+    <string name="settings_more_or_equal"><![CDATA[>=]]></string>
+    <string name="settings_press_to_enter_value">Press to enter value</string>
+    <string name="settings_shut_in_time">Shut-in Time</string>
+    <string name="settings_sales_time">Sales Time</string>
+    <string name="settings_open_time">Open Time</string>
+    <string name="settings_recovery_time">Recovery Time</string>
+    <string name="settings_press_to_change_nbetween_presures">Press to change\nbetween Presures</string>
+    <string name="settings_arrows"><![CDATA[>>>]]></string>
 </resources>
