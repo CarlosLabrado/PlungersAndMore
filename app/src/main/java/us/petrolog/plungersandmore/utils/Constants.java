@@ -11,6 +11,7 @@ public class Constants {
 
     public static final String FIREBASE_LOCATION_USERS = "users";
     public static final String FIREBASE_LOCATION_WELLS = "wells";
+    public static final String FIREBASE_NAME_SETTINGS = "settings";
 
 
     public static final String KEY_EMAIL = "EMAIL";
@@ -29,4 +30,17 @@ public class Constants {
     public static final String PROVIDER_DATA_DISPLAY_NAME = "displayName";
 
     public static final String EXTRA_WELL_KEY_REFERENCE = "EXTRA_WELL_KEY_REFERENCE";
+
+    public static final String SETTINGS_CLOSE_VALUE = "closeValue";
+    public static final String SETTINGS_CP = "cp";
+    public static final String SETTINGS_FALL_TIME = "fallTime";
+    public static final String SETTINGS_OPEN_TIME = "openTime";
+    public static final String SETTINGS_OPEN_VALVE = "openValve";
+    public static final String SETTINGS_OPEN_VALVE_WITH = "openValveWith";
+    public static final String SETTINGS_RECOVERY_TIME = "recoveryTime";
+    public static final String SETTINGS_SALES_TIME = "salesTime";
+    public static final String SETTINGS_SHUT_IN_TIME = "shutInTime";
+    public static final String SETTINGS_TP = "tp";
+
+
 }

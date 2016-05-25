@@ -154,7 +154,8 @@ public class TabContainerActivity extends AppCompatActivity implements BottomNav
                 fragment = new HistoricalCyclesFragment();
                 break;
             case 2:
-                fragment = new ChangeSettingsFragment();
+                new ChangeSettingsFragment();
+                fragment = ChangeSettingsFragment.newInstance(mCurrentWellStringRef);
                 break;
             default:
                 break;

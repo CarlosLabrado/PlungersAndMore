@@ -5,21 +5,30 @@
              android:layout_height="match_parent"
              tools:context="us.petrolog.plungersandmore.ui.ChangeSettingsFragment">
 
+    <!--Dummy layout to lose focus on start-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true"
+        >
+    </LinearLayout>
     <android.support.v7.widget.GridLayout
 
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginBottom="55dp"
-        app:columnCount="2"
+        app:columnCount="5"
         app:columnOrderPreserved="false"
         app:orientation="horizontal"
         app:rowCount="3"
-        app:useDefaultMargins="false">
+        app:useDefaultMargins="false"
+        >
 
         <android.support.v7.widget.GridLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:columnCount="5"
+            app:layout_columnSpan="2"
             app:layout_columnWeight="1"
             app:layout_gravity="center"
             app:layout_rowWeight="1"
@@ -52,7 +61,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="0"
                 app:layout_row="2"
                 tools:text="####"/>
@@ -64,7 +72,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="1"
                 app:layout_row="2"
                 tools:text="##"/>
@@ -76,7 +83,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="2"
                 app:layout_row="2"
                 tools:text="1234"/>
@@ -88,7 +94,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="3"
                 app:layout_row="2"
                 tools:text="12"/>
@@ -100,7 +105,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="4"
                 app:layout_row="2"
                 tools:text="12"/>
@@ -120,10 +124,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/hh_mm"
+                android:text="@string/hh_mm_ss"
                 app:layout_column="2"
 
-                app:layout_columnSpan="2"
+                app:layout_columnSpan="3"
                 app:layout_gravity="center_horizontal"
                 app:layout_row="3"/>
 
@@ -133,7 +137,7 @@
                 android:layout_height="40dp"
                 android:text="@string/btn_change"
                 app:layout_column="0"
-                app:layout_columnSpan="5"
+                app:layout_columnSpan="2"
                 app:layout_gravity="center"
                 app:layout_row="4"/>
 
@@ -144,6 +148,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:columnCount="13"
+            app:layout_columnSpan="3"
             app:layout_columnWeight="1"
             app:layout_gravity="center"
             app:layout_rowWeight="1"
@@ -196,13 +201,12 @@
 
 
             <EditText
-                android:id="@+id/editTextTubingPressureWrite"
+                android:id="@+id/editTextTubingPressureRead"
                 style="@style/editTextSettingsBlue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="3"
                 app:layout_columnSpan="3"
                 app:layout_row="2"
@@ -219,7 +223,7 @@
                 app:layout_row="2"/>
 
             <EditText
-                android:id="@+id/editTextTubingPressureRead"
+                android:id="@+id/editTextTubingPressureWrite"
                 style="@style/editTextSettingsGrey"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -227,7 +231,6 @@
                 android:layout_marginStart="4dp"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="7"
                 app:layout_columnSpan="3"
                 app:layout_row="2"
@@ -249,21 +252,22 @@
                 app:layout_column="0"
                 app:layout_columnSpan="3"
                 app:layout_gravity="center_horizontal"
-                app:layout_row="3"/>
+                app:layout_row="3"
+                android:layout_marginTop="4dp"/>
 
 
             <EditText
-                android:id="@+id/editTextCasingPressureWrite"
+                android:id="@+id/editTextCasingPressureRead"
                 style="@style/editTextSettingsBlue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="3"
                 app:layout_columnSpan="3"
                 app:layout_row="3"
-                tools:text="####"/>
+                tools:text="####"
+                android:layout_marginTop="4dp"/>
 
 
             <TextView
@@ -273,10 +277,11 @@
                 app:layout_column="6"
                 app:layout_columnSpan="1"
                 app:layout_gravity="center_horizontal"
-                app:layout_row="3"/>
+                app:layout_row="3"
+                android:layout_marginTop="4dp"/>
 
             <EditText
-                android:id="@+id/editTextCasingPressureRead"
+                android:id="@+id/editTextCasingPressureWrite"
                 style="@style/editTextSettingsGrey"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -284,11 +289,11 @@
                 android:layout_marginStart="4dp"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="7"
                 app:layout_columnSpan="3"
                 app:layout_row="3"
-                tools:text="##"/>
+                tools:text="##"
+                android:layout_marginTop="4dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -297,7 +302,8 @@
                 app:layout_column="10"
                 app:layout_columnSpan="2"
                 app:layout_gravity="center_horizontal"
-                app:layout_row="3"/>
+                app:layout_row="3"
+                android:layout_marginTop="4dp"/>
 
             <Button
                 android:id="@+id/buttonTubingPressureChange"
@@ -316,6 +322,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:columnCount="5"
+            app:layout_columnSpan="2"
             app:layout_columnWeight="1"
             app:layout_gravity="center"
             app:layout_rowWeight="1"
@@ -348,7 +355,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="0"
                 app:layout_row="2"
                 tools:text="####"/>
@@ -360,7 +366,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="1"
                 app:layout_row="2"
                 tools:text="##"/>
@@ -372,7 +377,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="2"
                 app:layout_row="2"
                 tools:text="1234"/>
@@ -384,7 +388,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="3"
                 app:layout_row="2"
                 tools:text="12"/>
@@ -396,7 +399,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="4"
                 app:layout_row="2"
                 tools:text="12"/>
@@ -416,10 +418,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/hh_mm"
+                android:text="@string/hh_mm_ss"
                 app:layout_column="2"
 
-                app:layout_columnSpan="2"
+                app:layout_columnSpan="3"
                 app:layout_gravity="center_horizontal"
                 app:layout_row="3"/>
 
@@ -429,7 +431,7 @@
                 android:layout_height="40dp"
                 android:text="@string/btn_change"
                 app:layout_column="0"
-                app:layout_columnSpan="5"
+                app:layout_columnSpan="2"
                 app:layout_gravity="center"
                 app:layout_row="4"/>
 
@@ -439,6 +441,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:columnCount="5"
+            app:layout_columnSpan="2"
             app:layout_columnWeight="1"
             app:layout_gravity="center"
             app:layout_rowWeight="1"
@@ -471,7 +474,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="0"
                 app:layout_row="2"
                 tools:text="####"/>
@@ -483,7 +485,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="1"
                 app:layout_row="2"
                 tools:text="##"/>
@@ -495,7 +496,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="2"
                 app:layout_row="2"
                 tools:text="1234"/>
@@ -507,7 +507,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="3"
                 app:layout_row="2"
                 tools:text="12"/>
@@ -519,7 +518,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="4"
                 app:layout_row="2"
                 tools:text="12"/>
@@ -539,10 +537,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/hh_mm"
+                android:text="@string/hh_mm_ss"
                 app:layout_column="2"
 
-                app:layout_columnSpan="2"
+                app:layout_columnSpan="3"
                 app:layout_gravity="center_horizontal"
                 app:layout_row="3"/>
 
@@ -552,7 +550,7 @@
                 android:layout_height="40dp"
                 android:text="@string/btn_change"
                 app:layout_column="0"
-                app:layout_columnSpan="5"
+                app:layout_columnSpan="2"
                 app:layout_gravity="center"
                 app:layout_row="4"/>
 
@@ -563,6 +561,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:columnCount="5"
+            app:layout_columnSpan="2"
             app:layout_columnWeight="1"
             app:layout_gravity="center"
             app:layout_rowWeight="1"
@@ -595,7 +594,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="0"
                 app:layout_row="2"
                 tools:text="####"/>
@@ -607,7 +605,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="1"
                 app:layout_row="2"
                 tools:text="##"/>
@@ -619,7 +616,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="2"
                 app:layout_row="2"
                 tools:text="1234"/>
@@ -631,7 +627,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="3"
                 app:layout_row="2"
                 tools:text="12"/>
@@ -643,7 +638,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="4"
                 app:layout_row="2"
                 tools:text="12"/>
@@ -663,10 +657,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/hh_mm"
+                android:text="@string/hh_mm_ss"
                 app:layout_column="2"
 
-                app:layout_columnSpan="2"
+                app:layout_columnSpan="3"
                 app:layout_gravity="center_horizontal"
                 app:layout_row="3"/>
 
@@ -676,7 +670,7 @@
                 android:layout_height="40dp"
                 android:text="@string/btn_change"
                 app:layout_column="0"
-                app:layout_columnSpan="5"
+                app:layout_columnSpan="2"
                 app:layout_gravity="center"
                 app:layout_row="4"/>
 
@@ -686,6 +680,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:columnCount="5"
+            app:layout_columnSpan="2"
             app:layout_columnWeight="1"
             app:layout_gravity="center"
             app:layout_rowWeight="1"
@@ -718,7 +713,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="0"
                 app:layout_row="2"
                 tools:text="####"/>
@@ -730,7 +724,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="1"
                 app:layout_row="2"
                 tools:text="##"/>
@@ -742,7 +735,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="2"
                 app:layout_row="2"
                 tools:text="1234"/>
@@ -754,7 +746,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="3"
                 app:layout_row="2"
                 tools:text="12"/>
@@ -766,7 +757,6 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center_horizontal"
-                android:inputType="textPersonName"
                 app:layout_column="4"
                 app:layout_row="2"
                 tools:text="12"/>
@@ -786,10 +776,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/hh_mm"
+                android:text="@string/hh_mm_ss"
                 app:layout_column="2"
 
-                app:layout_columnSpan="2"
+                app:layout_columnSpan="3"
                 app:layout_gravity="center_horizontal"
                 app:layout_row="3"/>
 
@@ -799,9 +789,35 @@
                 android:layout_height="40dp"
                 android:text="@string/btn_change"
                 app:layout_column="0"
-                app:layout_columnSpan="5"
+                app:layout_columnSpan="2"
                 app:layout_gravity="center"
                 app:layout_row="4"/>
         </android.support.v7.widget.GridLayout>
+
+        <Button
+            android:id="@+id/buttonSettingsCloseValve"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_settings_close_valve"
+            android:enabled="false"
+            app:layout_column="4"
+            app:layout_row="1"
+            app:layout_columnSpan="1"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center"
+            app:layout_rowWeight="1"/>
+
+        <Button
+            android:id="@+id/buttonSettingsOpenValve"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_settings_open_valve"
+            android:enabled="false"
+            app:layout_column="4"
+            app:layout_row="2"
+            app:layout_columnSpan="1"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center"
+            app:layout_rowWeight="1"/>
     </android.support.v7.widget.GridLayout>
 </FrameLayout>

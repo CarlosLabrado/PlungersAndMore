@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="innerSettingsColor">@color/grey_300</color>
+
     <!--Material design colors-->
     <color name="red_50">#ffebee</color>
     <color name="red_100">#ffcdd2</color>
